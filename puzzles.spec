@@ -6,10 +6,10 @@
 # autospec commit: 0c408e70899d
 #
 Name     : puzzles
-Version  : tar
-Release  : 1
-URL      : https://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles.tar.gz
-Source0  : https://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles.tar.gz
+Version  : 20240330.fd304c5
+Release  : 2
+URL      : https://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-20240330.fd304c5.tar.gz
+Source0  : https://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-20240330.fd304c5.tar.gz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : MIT
@@ -63,7 +63,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1712008094
+export SOURCE_DATE_EPOCH=1712010593
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -100,10 +100,10 @@ FFLAGS="$CLEAR_INTERMEDIATE_FFLAGS"
 FCFLAGS="$CLEAR_INTERMEDIATE_FCFLAGS"
 ASFLAGS="$CLEAR_INTERMEDIATE_ASFLAGS"
 LDFLAGS="$CLEAR_INTERMEDIATE_LDFLAGS"
-export SOURCE_DATE_EPOCH=1712008094
+export SOURCE_DATE_EPOCH=1712010593
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/puzzles
-cp %{_builddir}/puzzles-20240330.fd304c5/LICENCE %{buildroot}/usr/share/package-licenses/puzzles/83dd1f1e328493436aca627060881441137795bc || :
+cp %{_builddir}/puzzles-%{version}/LICENCE %{buildroot}/usr/share/package-licenses/puzzles/83dd1f1e328493436aca627060881441137795bc || :
 export GOAMD64=v2
 GOAMD64=v2
 pushd clr-build
