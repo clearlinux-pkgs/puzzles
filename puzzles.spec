@@ -7,14 +7,14 @@
 #
 Name     : puzzles
 Version  : 20240330.fd304c5
-Release  : 2
+Release  : 3
 URL      : https://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-20240330.fd304c5.tar.gz
 Source0  : https://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-20240330.fd304c5.tar.gz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : MIT
-Requires: puzzles-bin = %{version}-%{release}
 Requires: puzzles-data = %{version}-%{release}
+Requires: puzzles-libexec = %{version}-%{release}
 Requires: puzzles-license = %{version}-%{release}
 BuildRequires : ImageMagick
 BuildRequires : buildreq-cmake
@@ -28,22 +28,21 @@ BuildRequires : pkgconfig(gtk+-3.0)
 puzzle collection. The collection's web site is at
 <https://www.chiark.greenend.org.uk/~sgtatham/puzzles/>.
 
-%package bin
-Summary: bin components for the puzzles package.
-Group: Binaries
-Requires: puzzles-data = %{version}-%{release}
-Requires: puzzles-license = %{version}-%{release}
-
-%description bin
-bin components for the puzzles package.
-
-
 %package data
 Summary: data components for the puzzles package.
 Group: Data
 
 %description data
 data components for the puzzles package.
+
+
+%package libexec
+Summary: libexec components for the puzzles package.
+Group: Default
+Requires: puzzles-license = %{version}-%{release}
+
+%description libexec
+libexec components for the puzzles package.
 
 
 %package license
@@ -63,7 +62,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1712010593
+export SOURCE_DATE_EPOCH=1712070860
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -100,7 +99,7 @@ FFLAGS="$CLEAR_INTERMEDIATE_FFLAGS"
 FCFLAGS="$CLEAR_INTERMEDIATE_FCFLAGS"
 ASFLAGS="$CLEAR_INTERMEDIATE_ASFLAGS"
 LDFLAGS="$CLEAR_INTERMEDIATE_LDFLAGS"
-export SOURCE_DATE_EPOCH=1712010593
+export SOURCE_DATE_EPOCH=1712070860
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/puzzles
 cp %{_builddir}/puzzles-%{version}/LICENCE %{buildroot}/usr/share/package-licenses/puzzles/83dd1f1e328493436aca627060881441137795bc || :
@@ -109,52 +108,19 @@ GOAMD64=v2
 pushd clr-build
 %make_install
 popd
+## install_append content
+# Move puzzle binaries to a non-conflicting location
+mkdir -p %{buildroot}/usr/libexec/puzzles
+mv %{buildroot}/usr/bin/* %{buildroot}/usr/libexec/puzzles/
+
+# Adjust desktop application files to point to relocated binaries
+for desktop in %{buildroot}/usr/share/applications/*.desktop; do
+sed -i 's|^\(Exec=\)\(.*\)|\1/usr/libexec/puzzles/\2|' "${desktop}"
+done
+## install_append end
 
 %files
 %defattr(-,root,root,-)
-
-%files bin
-%defattr(-,root,root,-)
-/usr/bin/blackbox
-/usr/bin/bridges
-/usr/bin/cube
-/usr/bin/dominosa
-/usr/bin/fifteen
-/usr/bin/filling
-/usr/bin/flip
-/usr/bin/flood
-/usr/bin/galaxies
-/usr/bin/guess
-/usr/bin/inertia
-/usr/bin/keen
-/usr/bin/lightup
-/usr/bin/loopy
-/usr/bin/magnets
-/usr/bin/map
-/usr/bin/mines
-/usr/bin/mosaic
-/usr/bin/net
-/usr/bin/netslide
-/usr/bin/palisade
-/usr/bin/pattern
-/usr/bin/pearl
-/usr/bin/pegs
-/usr/bin/range
-/usr/bin/rect
-/usr/bin/samegame
-/usr/bin/signpost
-/usr/bin/singles
-/usr/bin/sixteen
-/usr/bin/slant
-/usr/bin/solo
-/usr/bin/tents
-/usr/bin/towers
-/usr/bin/tracks
-/usr/bin/twiddle
-/usr/bin/undead
-/usr/bin/unequal
-/usr/bin/unruly
-/usr/bin/untangle
 
 %files data
 %defattr(-,root,root,-)
@@ -558,6 +524,49 @@ popd
 /usr/share/icons/hicolor/96x96/apps/unequal.png
 /usr/share/icons/hicolor/96x96/apps/unruly.png
 /usr/share/icons/hicolor/96x96/apps/untangle.png
+
+%files libexec
+%defattr(-,root,root,-)
+/usr/libexec/puzzles/blackbox
+/usr/libexec/puzzles/bridges
+/usr/libexec/puzzles/cube
+/usr/libexec/puzzles/dominosa
+/usr/libexec/puzzles/fifteen
+/usr/libexec/puzzles/filling
+/usr/libexec/puzzles/flip
+/usr/libexec/puzzles/flood
+/usr/libexec/puzzles/galaxies
+/usr/libexec/puzzles/guess
+/usr/libexec/puzzles/inertia
+/usr/libexec/puzzles/keen
+/usr/libexec/puzzles/lightup
+/usr/libexec/puzzles/loopy
+/usr/libexec/puzzles/magnets
+/usr/libexec/puzzles/map
+/usr/libexec/puzzles/mines
+/usr/libexec/puzzles/mosaic
+/usr/libexec/puzzles/net
+/usr/libexec/puzzles/netslide
+/usr/libexec/puzzles/palisade
+/usr/libexec/puzzles/pattern
+/usr/libexec/puzzles/pearl
+/usr/libexec/puzzles/pegs
+/usr/libexec/puzzles/range
+/usr/libexec/puzzles/rect
+/usr/libexec/puzzles/samegame
+/usr/libexec/puzzles/signpost
+/usr/libexec/puzzles/singles
+/usr/libexec/puzzles/sixteen
+/usr/libexec/puzzles/slant
+/usr/libexec/puzzles/solo
+/usr/libexec/puzzles/tents
+/usr/libexec/puzzles/towers
+/usr/libexec/puzzles/tracks
+/usr/libexec/puzzles/twiddle
+/usr/libexec/puzzles/undead
+/usr/libexec/puzzles/unequal
+/usr/libexec/puzzles/unruly
+/usr/libexec/puzzles/untangle
 
 %files license
 %defattr(0644,root,root,0755)

@@ -1,0 +1,8 @@
+# Move puzzle binaries to a non-conflicting location
+mkdir -p %{buildroot}/usr/libexec/puzzles
+mv %{buildroot}/usr/bin/* %{buildroot}/usr/libexec/puzzles/
+
+# Adjust desktop application files to point to relocated binaries
+for desktop in %{buildroot}/usr/share/applications/*.desktop; do
+	sed -i 's|^\(Exec=\)\(.*\)|\1/usr/libexec/puzzles/\2|' "${desktop}"
+done
