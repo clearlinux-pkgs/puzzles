@@ -17,7 +17,7 @@ fi
 echo "New URL: ${NEW_URL}"
 
 echo "Updating Makefile."
-sed -i "s|^URL=.*|URL = ${NEW_URL}|" Makefile
+sed -i "s|^URL.*=.*|URL = ${NEW_URL}|" Makefile
 
 # Check whether anything changed. Should have been caught above, so this is
 # probably a script failure.
